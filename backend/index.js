@@ -1,24 +1,19 @@
 import express from "express";
 import mysql from "mysql";
 import cors from "cors";
+import db from "./config/db.js"
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const db = mysql.createConnection({
-    host:"localhost",
-    user:"root",
-    password:"garotogamer12",
-    database:"test"
-
-})
 
 app.get("/", (req, res) => {
     res.json("hello");
   });
   
   app.get("/books", (req, res) => {
+    console.log("its called");
     const q = "SELECT * FROM books";
     db.query(q, (err, data) => {
       if (err) {
@@ -30,9 +25,10 @@ app.get("/", (req, res) => {
   });
   
   app.post("/books", (req, res) => {
-    const q = "INSERT INTO books(`title`, `desc`, `price`, `cover`) VALUES (?)";
+    const q = "INSERT INTO books(`id`, `title`, `desc`, `price`, `cover`) VALUES (?)";
   
     const values = [
+      req.body.id,
       req.body.title,
       req.body.desc,
       req.body.price,
@@ -72,6 +68,6 @@ app.get("/", (req, res) => {
     });
   });
   
-  app.listen(8800, () => {
+  app.listen(3001, () => {
     console.log("Connected to backend.");
   });
